@@ -8,11 +8,14 @@
 
 body {
   font-family: system-ui, sans-serif;
-  background: #fff;
+  background: linear-gradient(135deg, #667eea 0%, #f64f59 100%);
+  min-height: 100vh;
   color: #1a1a1a;
   padding: 2rem;
 }
 
 h1 {
   margin-bottom: 1.5rem;
+  color: #fff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
