@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, watch } from 'vue'
+import { reactive, watch, computed } from 'vue'
 import type { InputValues } from '../utils/compute'
 
 const emit = defineEmits<{
@@ -17,6 +17,9 @@ const values = reactive<InputValues>({
 })
 
 watch(values, () => emit('change', { ...values }), { deep: true })
+
+const allocationTotal = computed(() => values.canadianStocks + values.usStocks + values.internationalStocks + values.bonds)
+const cashAllocation = computed(() => 100 - allocationTotal.value)
 
 type DollarField = 'tfsa' | 'rrsp' | 'registered'
 
@@ -126,6 +129,13 @@ function onDollarKeydown(e: KeyboardEvent) {
       <label for="bonds-input">Bonds</label>
       <div class="percent-field">
         <input id="bonds-input" type="number" min="0" max="100" step="any" v-model.number="values.bonds" />
+        <span>%</span>
+      </div>
+    </div>
+    <div class="field field--readonly" :class="{ 'field--invalid': cashAllocation < 0 }">
+      <label for="cash-input">Cash</label>
+      <div class="percent-field">
+        <input id="cash-input" type="number" :value="cashAllocation" readonly tabindex="-1" />
         <span>%</span>
       </div>
     </div>

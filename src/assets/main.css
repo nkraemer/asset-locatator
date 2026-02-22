@@ -119,6 +119,27 @@ input[type='number'] {
   font-size: 0.95rem;
 }
 
+.field--readonly label {
+  color: var(--color-text-muted);
+  font-style: italic;
+}
+
+.field--readonly input[type='number'] {
+  background: transparent;
+  border: none;
+  padding: 0;
+  width: auto;
+  color: var(--color-text-muted);
+  cursor: default;
+}
+
+.field--invalid label,
+.field--invalid input[type='number'],
+.field--invalid input[type='text'],
+.field--invalid .percent-field span {
+  color: var(--color-invalid);
+}
+
 .app-footer {
   margin-top: 2rem;
   display: flex;
