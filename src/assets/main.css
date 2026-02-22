@@ -15,7 +15,118 @@ body {
 }
 
 h1 {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   color: #fff;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.description {
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: 2rem;
+  max-width: 60ch;
+  line-height: 1.6;
+}
+
+.panels {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.panel {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  flex: 1;
+  min-width: 220px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.panel h2 {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #555;
+}
+
+.field {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.field label {
+  font-weight: 500;
+  color: #333;
+}
+
+.field input[type='number'],
+.field output {
+  width: 120px;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  text-align: right;
+}
+
+.field output {
+  background: #f5f5f5;
+  border-color: transparent;
+  display: inline-block;
+}
+
+.panel h2.section-heading {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e5e5;
+}
+
+.dollar-field {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.dollar-field span {
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.dollar-field input[type='number'] {
+  width: 105px;
+}
+
+.percent-field {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.percent-field input[type='number'] {
+  width: 90px;
+}
+
+.percent-field span {
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.app-footer {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1.5rem;
+}
+
+.app-footer a {
+  color: rgba(255, 255, 255, 0.85);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.app-footer a:hover {
+  color: #fff;
+  text-decoration: underline;
 }
