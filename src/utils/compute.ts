@@ -14,15 +14,18 @@ export interface OutputValues {
   registered: number
 }
 
+export function toNum(n: number): number {
+  return Number.isFinite(n) ? n : 0
+}
+
 // TODO: replace with real algorithm
 export function compute(inputs: InputValues): OutputValues {
   const totalAllocation =
-    (inputs.canadianStocks + inputs.usStocks + inputs.internationalStocks + inputs.bonds) / 100
-  console.log("canadianStocks",inputs.canadianStocks)
-  console.log("usStocks",inputs.usStocks)
-  console.log("internationalStocks",inputs.internationalStocks)
-  console.log("bonds",inputs.bonds)
-  console.log('Total allocation:', totalAllocation)
+    (toNum(inputs.canadianStocks) +
+      toNum(inputs.usStocks) +
+      toNum(inputs.internationalStocks) +
+      toNum(inputs.bonds)) /
+    100
   return {
     tfsa: inputs.tfsa * totalAllocation,
     rrsp: inputs.rrsp * totalAllocation,

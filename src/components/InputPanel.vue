@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive, watch, computed } from 'vue'
-import type { InputValues } from '../utils/compute'
+import { toNum, type InputValues } from '../utils/compute'
 
 const emit = defineEmits<{
   change: [value: InputValues]
@@ -16,17 +16,26 @@ const values = reactive<InputValues>({
   bonds: 0,
 })
 
-const toNum = (n: number) => (Number.isFinite(n) ? n : 0)
+watch(
+  values,
+  () =>
+    emit('change', {
+      ...values,
+      canadianStocks: toNum(values.canadianStocks),
+      usStocks: toNum(values.usStocks),
+      internationalStocks: toNum(values.internationalStocks),
+      bonds: toNum(values.bonds),
+    }),
+  { deep: true },
+)
 
-watch(values, () => emit('change', {
-  ...values,
-  canadianStocks: toNum(values.canadianStocks),
-  usStocks: toNum(values.usStocks),
-  internationalStocks: toNum(values.internationalStocks),
-  bonds: toNum(values.bonds),
-}), { deep: true })
-
-const allocationTotal = computed(() => toNum(values.canadianStocks) + toNum(values.usStocks) + toNum(values.internationalStocks) + toNum(values.bonds))
+const allocationTotal = computed(
+  () =>
+    toNum(values.canadianStocks) +
+    toNum(values.usStocks) +
+    toNum(values.internationalStocks) +
+    toNum(values.bonds),
+)
 const cashAllocation = computed(() => 100 - allocationTotal.value)
 
 type DollarField = 'tfsa' | 'rrsp' | 'registered'
@@ -48,7 +57,7 @@ function onDollarChange(field: DollarField, e: Event) {
 }
 
 function onDollarBlur(field: DollarField, e: Event) {
-  (e.target as HTMLInputElement).value = formatDollar(values[field])
+  ;(e.target as HTMLInputElement).value = formatDollar(values[field])
 }
 
 function onDollarKeydown(e: KeyboardEvent) {
@@ -115,28 +124,56 @@ function onDollarKeydown(e: KeyboardEvent) {
     <div class="field">
       <label for="canadian-stocks-input">Canadian Stocks</label>
       <div class="percent-field">
-        <input id="canadian-stocks-input" type="number" min="0" max="100" step="any" v-model.number="values.canadianStocks" />
+        <input
+          id="canadian-stocks-input"
+          v-model.number="values.canadianStocks"
+          type="number"
+          min="0"
+          max="100"
+          step="any"
+        />
         <span>%</span>
       </div>
     </div>
     <div class="field">
       <label for="us-stocks-input">US Stocks</label>
       <div class="percent-field">
-        <input id="us-stocks-input" type="number" min="0" max="100" step="any" v-model.number="values.usStocks" />
+        <input
+          id="us-stocks-input"
+          v-model.number="values.usStocks"
+          type="number"
+          min="0"
+          max="100"
+          step="any"
+        />
         <span>%</span>
       </div>
     </div>
     <div class="field">
       <label for="international-stocks-input">International Stocks</label>
       <div class="percent-field">
-        <input id="international-stocks-input" type="number" min="0" max="100" step="any" v-model.number="values.internationalStocks" />
+        <input
+          id="international-stocks-input"
+          v-model.number="values.internationalStocks"
+          type="number"
+          min="0"
+          max="100"
+          step="any"
+        />
         <span>%</span>
       </div>
     </div>
     <div class="field">
       <label for="bonds-input">Bonds</label>
       <div class="percent-field">
-        <input id="bonds-input" type="number" min="0" max="100" step="any" v-model.number="values.bonds" />
+        <input
+          id="bonds-input"
+          v-model.number="values.bonds"
+          type="number"
+          min="0"
+          max="100"
+          step="any"
+        />
         <span>%</span>
       </div>
     </div>
