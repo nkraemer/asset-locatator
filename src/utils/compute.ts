@@ -6,6 +6,7 @@ export interface InputValues {
   usStocks: number
   internationalStocks: number
   bonds: number
+  exchangeRate: number | null
 }
 
 export interface OutputValues {
@@ -26,9 +27,10 @@ export function compute(inputs: InputValues): OutputValues {
       toNum(inputs.internationalStocks) +
       toNum(inputs.bonds)) /
     100
+  const fxRate = inputs.exchangeRate != null && inputs.exchangeRate > 0 ? inputs.exchangeRate : 1
   return {
-    tfsa: inputs.tfsa * totalAllocation,
-    rrsp: inputs.rrsp * totalAllocation,
-    registered: inputs.registered * totalAllocation,
+    tfsa: inputs.tfsa * totalAllocation * fxRate,
+    rrsp: inputs.rrsp * totalAllocation * fxRate,
+    registered: inputs.registered * totalAllocation * fxRate,
   }
 }

@@ -1,12 +1,17 @@
 <script setup lang="ts">
-import { reactive, watch, computed } from 'vue'
+import { reactive, watch, computed, ref } from 'vue'
 import { toNum, type InputValues } from '../utils/compute'
+import type { ExchangeRateState } from '../composables/useExchangeRate'
+
+const props = defineProps<{
+  exchangeRate: ExchangeRateState
+}>()
 
 const emit = defineEmits<{
   change: [value: InputValues]
 }>()
 
-const values = reactive<InputValues>({
+const values = reactive({
   tfsa: 10000,
   rrsp: 20000,
   registered: 5000,
@@ -16,18 +21,19 @@ const values = reactive<InputValues>({
   bonds: 0,
 })
 
-watch(
-  values,
-  () =>
-    emit('change', {
-      ...values,
-      canadianStocks: toNum(values.canadianStocks),
-      usStocks: toNum(values.usStocks),
-      internationalStocks: toNum(values.internationalStocks),
-      bonds: toNum(values.bonds),
-    }),
-  { deep: true },
-)
+function emitChange() {
+  emit('change', {
+    ...values,
+    canadianStocks: toNum(values.canadianStocks),
+    usStocks: toNum(values.usStocks),
+    internationalStocks: toNum(values.internationalStocks),
+    bonds: toNum(values.bonds),
+    exchangeRate: props.exchangeRate.rate.value,
+  })
+}
+
+watch(values, emitChange, { deep: true })
+watch(() => props.exchangeRate.rate.value, emitChange)
 
 const allocationTotal = computed(
   () =>
@@ -65,6 +71,25 @@ function onDollarKeydown(e: KeyboardEvent) {
   if (!allowed.includes(e.key) && !/^\d$/.test(e.key) && !e.metaKey && !e.ctrlKey) {
     e.preventDefault()
   }
+}
+
+const rateError = ref<string | null>(null)
+
+function onRateChange(e: Event) {
+  const raw = (e.target as HTMLInputElement).value
+  if (raw === '') {
+    props.exchangeRate.resetRate()
+    rateError.value = null
+    return
+  }
+  const n = parseFloat(raw)
+  const error = props.exchangeRate.setCustomRate(n)
+  rateError.value = error
+}
+
+function onRateReset() {
+  props.exchangeRate.resetRate()
+  rateError.value = null
 }
 </script>
 
@@ -183,6 +208,45 @@ function onDollarKeydown(e: KeyboardEvent) {
         <input id="cash-input" type="number" :value="cashAllocation" readonly tabindex="-1" />
         <span>%</span>
       </div>
+    </div>
+
+    <h2 class="section-heading">Exchange Rate</h2>
+    <div class="field" :class="{ 'field--invalid': rateError }">
+      <label for="exchange-rate-input">CAD/USD</label>
+      <div class="rate-field">
+        <input
+          id="exchange-rate-input"
+          type="number"
+          step="any"
+          min="0"
+          :value="exchangeRate.rate.value"
+          :placeholder="exchangeRate.status.value === 'loading' ? 'Loading...' : 'Enter rate'"
+          @change="onRateChange"
+        />
+        <button
+          v-if="exchangeRate.isCustom.value"
+          type="button"
+          class="rate-reset"
+          @click="onRateReset"
+        >
+          Reset
+        </button>
+      </div>
+      <span v-if="rateError" class="field-error">{{ rateError }}</span>
+      <span v-else-if="exchangeRate.status.value === 'error'" class="field-error">
+        {{ exchangeRate.errorMessage.value }} — enter a rate manually
+      </span>
+      <span v-else-if="exchangeRate.isCustom.value" class="field-hint">Custom rate</span>
+      <span v-else-if="exchangeRate.status.value === 'ready'" class="field-hint">
+        Source:
+        <a
+          href="https://www.bankofcanada.ca/rates/exchange/daily-exchange-rates/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Bank of Canada
+        </a>
+      </span>
     </div>
   </section>
 </template>

@@ -21,9 +21,9 @@ describe('toNum', () => {
 })
 
 describe('compute', () => {
-  const base = { tfsa: 10000, rrsp: 20000, registered: 5000 }
+  const base = { tfsa: 10000, rrsp: 20000, registered: 5000, exchangeRate: null as number | null }
 
-  it('100% total allocation: outputs equal inputs', () => {
+  it('100% total allocation: outputs equal inputs (no exchange rate)', () => {
     const result = compute({
       ...base,
       canadianStocks: 40,
@@ -71,6 +71,7 @@ describe('compute', () => {
       usStocks: 50,
       internationalStocks: 0,
       bonds: 0,
+      exchangeRate: 1.35,
     })
     expect(result.tfsa).toBe(0)
     expect(result.rrsp).toBe(0)
@@ -101,5 +102,45 @@ describe('compute', () => {
     expect(result.tfsa).toBeCloseTo(12000)
     expect(result.rrsp).toBeCloseTo(24000)
     expect(result.registered).toBeCloseTo(6000)
+  })
+
+  it('exchange rate multiplies outputs', () => {
+    const result = compute({
+      ...base,
+      exchangeRate: 1.35,
+      canadianStocks: 50,
+      usStocks: 50,
+      internationalStocks: 0,
+      bonds: 0,
+    })
+    expect(result.tfsa).toBeCloseTo(13500)
+    expect(result.rrsp).toBeCloseTo(27000)
+    expect(result.registered).toBeCloseTo(6750)
+  })
+
+  it('null exchange rate is treated as 1 (no conversion)', () => {
+    const result = compute({
+      ...base,
+      exchangeRate: null,
+      canadianStocks: 50,
+      usStocks: 50,
+      internationalStocks: 0,
+      bonds: 0,
+    })
+    expect(result.tfsa).toBeCloseTo(10000)
+    expect(result.rrsp).toBeCloseTo(20000)
+    expect(result.registered).toBeCloseTo(5000)
+  })
+
+  it('zero exchange rate is treated as 1 (no conversion)', () => {
+    const result = compute({
+      ...base,
+      exchangeRate: 0,
+      canadianStocks: 100,
+      usStocks: 0,
+      internationalStocks: 0,
+      bonds: 0,
+    })
+    expect(result.tfsa).toBeCloseTo(10000)
   })
 })

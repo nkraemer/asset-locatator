@@ -4,9 +4,11 @@ import InputPanel from './components/InputPanel.vue'
 import OutputPanel from './components/OutputPanel.vue'
 import AppFooter from './components/AppFooter.vue'
 import { compute } from './utils/compute'
+import { useExchangeRate } from './composables/useExchangeRate'
 import type { OutputValues } from './utils/compute'
 
 const outputValues = ref<OutputValues>({ tfsa: 0, rrsp: 0, registered: 0 })
+const exchangeRate = useExchangeRate()
 
 function onInputChange(inputs: Parameters<typeof compute>[0]) {
   outputValues.value = compute(inputs)
@@ -21,7 +23,7 @@ function onInputChange(inputs: Parameters<typeof compute>[0]) {
       across account types to optimise for tax efficiency and long-term growth.
     </p>
     <div class="panels">
-      <InputPanel @change="onInputChange" />
+      <InputPanel :exchange-rate="exchangeRate" @change="onInputChange" />
       <OutputPanel :values="outputValues" />
     </div>
     <AppFooter />
