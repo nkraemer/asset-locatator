@@ -108,11 +108,16 @@ export function compute(inputs: InputValues): OutputValues {
     }
   }
 
-  return {
+  console.log("rrsp", rrsp)
+  console.log("rrspNominal",rrspNominal)
+  console.log("result",result)
+  const final_result = {
     ...result,
     rrspNominal,
     rrspNominalTotal: rrsp,
     grossUp: inputs.grossUp && taxRate > 0,
     exchangeRate: inputs.exchangeRate,
   }
+  console.log("final_result", final_result)
+  return final_result
 }

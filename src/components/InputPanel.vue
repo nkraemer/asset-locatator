@@ -133,7 +133,7 @@ function onRateReset() {
       </div>
     </div>
     <div class="field">
-      <label for="registered-input">Registered</label>
+      <label for="registered-input">Non-Registered</label>
       <div class="dollar-field">
         <span>$</span>
         <input

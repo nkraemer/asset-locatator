@@ -50,29 +50,28 @@ const assetLabels: { key: keyof AccountAllocation; label: string }[] = [
     </div>
 
     <div class="account-block">
-      <h3>RRSP — ${{ formatDollar(accountTotal(values.rrsp)) }}</h3>
+      <h3>RRSP — ${{ formatDollar(accountTotal(values.rrspNominal)) }}</h3>
       <p v-if="values.grossUp" class="account-note">
-        ${{ formatDollar(values.rrspNominalTotal) }} nominal
-        (before tax)
+        ${{ formatDollar(accountTotal(values.rrsp)) }} (after tax)
       </p>
       <template v-for="asset in assetLabels" :key="asset.key">
         <div v-if="values.rrsp[asset.key] > 0" class="field">
           <label>{{ asset.label }}</label>
           <div class="field-values">
-            <output>$ {{ formatDollar(values.rrsp[asset.key]) }}</output>
+            <output>$ {{ formatDollar(values.rrspNominal[asset.key]) }}</output>
             <div class="field-details">
               <span v-if="asset.key === 'usStocks' && values.exchangeRate">
-                US$ {{ formatUsd(values.rrsp[asset.key], values.exchangeRate) }}
+                US$ {{ formatUsd(values.rrspNominal[asset.key], values.exchangeRate) }}
               </span>
               <span v-if="values.grossUp && asset.key === 'usStocks' && values.exchangeRate">
-                ${{ formatDollar(values.rrspNominal[asset.key]) }} /
-                US$ {{ formatUsd(values.rrspNominal[asset.key], values.exchangeRate) }} nominal
+                ${{ formatDollar(values.rrsp[asset.key]) }} /
+                US$ {{ formatUsd(values.rrsp[asset.key], values.exchangeRate) }} (after tax)
               </span>
               <span v-else-if="values.grossUp && asset.key === 'usStocks'">
-                ${{ formatDollar(values.rrspNominal[asset.key]) }} nominal
+                ${{ formatDollar(values.rrsp[asset.key]) }} (after tax)
               </span>
               <span v-else-if="values.grossUp">
-                ${{ formatDollar(values.rrspNominal[asset.key]) }} nominal
+                ${{ formatDollar(values.rrsp[asset.key]) }} (after tax)
               </span>
             </div>
           </div>
@@ -81,7 +80,7 @@ const assetLabels: { key: keyof AccountAllocation; label: string }[] = [
     </div>
 
     <div class="account-block">
-      <h3>Registered — ${{ formatDollar(accountTotal(values.registered)) }}</h3>
+      <h3>Non-Registered — ${{ formatDollar(accountTotal(values.registered)) }}</h3>
       <template v-for="asset in assetLabels" :key="asset.key">
         <div v-if="values.registered[asset.key] > 0" class="field">
           <label>{{ asset.label }}</label>

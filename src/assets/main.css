@@ -89,6 +89,7 @@ input[type='number'] {
   background: var(--color-output-bg);
   border-color: transparent;
   display: inline-block;
+  width: 130px;
 }
 
 .output-panel {
