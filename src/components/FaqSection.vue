@@ -141,7 +141,8 @@
   border-radius: 12px;
   box-shadow: 0 4px 12px var(--color-panel-shadow);
   padding: 0;
-  margin-top: 2rem;
+  margin-top: 0;
+  margin-bottom: 2rem;
   max-width: 900px;
   margin-left: auto;
   margin-right: auto;
