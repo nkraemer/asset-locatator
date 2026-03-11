@@ -1,8 +1,5 @@
 <template>
   <footer class="app-footer">
-    <a href="#">About</a>
-    <a href="#">Methodology</a>
-    <a href="#">Privacy</a>
-    <a href="#">Contact</a>
+    <a href="mailto:feedback@nicholaskraemer.com">Contact</a>
   </footer>
 </template>
